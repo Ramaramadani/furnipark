@@ -1,0 +1,109 @@
+body {
+    font-family: 'Inter', sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f7fafc;
+}
+
+.container {
+    display: flex;
+    min-height: 100vh;
+    justify-content: center;
+    align-items: center;
+}
+
+.card {
+    display: flex;
+    background-color: white;
+    box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+    border-radius: 0.5rem;
+    overflow: hidden;
+    max-width: 1200px;
+    width: 100%;
+}
+
+.form-section {
+    flex: 1;
+    padding: 3rem;
+}
+
+.form-title {
+    font-size: 1.875rem;
+    font-weight: 800;
+    color: #1a202c;
+    margin-bottom: 2rem;
+}
+
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+    color: #4a5568;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid #e2e8f0;
+    border-radius: 0.5rem;
+    background-color: #f7fafc;
+    font-size: 0.875rem;
+    color: #2d3748;
+    transition: border-color 0.3s ease;
+}
+
+.form-group input:focus {
+    border-color: #cbd5e0;
+    background-color: white;
+    outline: none;
+}
+
+.submit-btn {
+    background-color: #667eea;
+    color: white;
+    font-weight: 600;
+    padding: 0.75rem;
+    width: 100%;
+    border: none;
+    border-radius: 0.5rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.submit-btn:hover {
+    background-color: #5a67d8;
+}
+
+.form-footer {
+    margin-top: 1.5rem;
+    text-align: center;
+    font-size: 0.875rem;
+    color: #4a5568;
+}
+
+.form-footer a {
+    color: #667eea;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.form-footer a:hover {
+    text-decoration: underline;
+}
+
+.illustration-section {
+    display: none;
+    background: url('https://storage.googleapis.com/devitary-image-host.appspot.com/15848031292911696601-undraw_designer_life_w96d.svg') center / contain no-repeat;
+}
+
+@media (min-width: 1024px) {
+    .illustration-section {
+        display: block;
+        flex: 1;
+        min-height: 100%;
+    }
+}
