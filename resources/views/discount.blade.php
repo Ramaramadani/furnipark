@@ -1,79 +1,132 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="max-w-7xl mx-auto px-6">
-    <h2 class="text-2xl font-semibold mb-6">Discount</h2>
+<style>
+  .slider-container {
+    position: relative;
+    overflow: hidden;
+    margin: 20px;
+  }
 
-    <div class="relative">
-        <!-- Left Arrow -->
-        <button id="prevBtn" class="absolute left-0 top-1/2 -translate-y-1/2 bg-white border p-2 z-10">
-            <i class="fas fa-chevron-left"></i>
-        </button>
+  .slider-wrapper {
+    display: flex;
+    transition: transform 0.5s ease-in-out;
+  }
 
-        <!-- Product Slider -->
-        <div id="slider" class="flex overflow-x-auto space-x-6 scroll-smooth no-scrollbar">
-            <!-- Produk 1 -->
-            <div class="min-w-[200px] flex-shrink-0 text-center">
-                <img src="{{ asset('images/meja.jpg') }}" alt="Meja" class="w-40 h-40 mx-auto object-contain">
-                <div class="font-bold">Rp300.000</div>
-                <div class="line-through text-gray-500">Rp400.000</div>
-                <div>Meja minimalis M-01</div>
-            </div>
+  .product-card {
+    flex: 0 0 25%; /* 4 per layar */
+    box-sizing: border-box;
+    padding: 10px;
+    text-align: center;
+  }
 
-            <!-- Produk 2 -->
-            <div class="min-w-[200px] flex-shrink-0 text-center">
-                <img src="{{ asset('images/lampu.jpg') }}" alt="Lampu" class="w-40 h-40 mx-auto object-contain">
-                <div class="font-bold">Rp350.000</div>
-                <div class="line-through text-gray-500">Rp450.000</div>
-                <div>Lampu tidur L-01</div>
-            </div>
+  .product-card img {
+    width: 100%;
+    height: 200px;
+    object-fit: contain;
+  }
 
-            <!-- Produk 3 -->
-            <div class="min-w-[200px] flex-shrink-0 text-center">
-                <img src="{{ asset('images/kasur.jpg') }}" alt="Kasur" class="w-40 h-40 mx-auto object-contain">
-                <div class="font-bold">Rp3.000.000</div>
-                <div class="line-through text-gray-500">Rp4.000.000</div>
-                <div>Kasur tunggal K-01</div>
-            </div>
+  .price-now {
+    font-weight: bold;
+    margin: 5px 0;
+  }
 
-            <!-- Produk 4 -->
-            <div class="min-w-[200px] flex-shrink-0 text-center">
-                <img src="{{ asset('images/lemari.jpg') }}" alt="Lemari" class="w-40 h-40 mx-auto object-contain">
-                <div class="font-bold">Rp800.000</div>
-                <div class="line-through text-gray-500">Rp900.000</div>
-                <div>Lemari minimalis L-01</div>
-            </div>
-        </div>
+  .price-old {
+    text-decoration: line-through;
+    color: gray;
+  }
 
-        <!-- Right Arrow -->
-        <button id="nextBtn" class="absolute right-0 top-1/2 -translate-y-1/2 bg-white border p-2 z-10">
-            <i class="fas fa-chevron-right"></i>
-        </button>
-    </div>
+  .arrow {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: white;
+    border: none;
+    font-size: 24px;
+    padding: 5px 10px;
+    cursor: pointer;
+    z-index: 1;
+    box-shadow: 0 0 4px rgba(0,0,0,0.2);
+  }
+
+  .arrow-left {
+    left: 0;
+  }
+
+  .arrow-right {
+    right: 0;
+  }
+
+  @media (max-width: 768px) {
+    .product-card {
+      flex: 0 0 50%;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .product-card {
+      flex: 0 0 100%;
+    }
+  }
+</style>
+
+<h2 style="margin-left: 20px;">Produk Diskon</h2>
+
+<div class="slider-container">
+  <button class="arrow arrow-left" onclick="moveSlide(-1)">&#10094;</button>
+
+  <div class="slider-wrapper" id="sliderWrapper">
+    @php
+      $products = [
+        ['img' => 'meja-anak.jfif', 'now' => 'Rp300.000', 'old' => 'Rp400.000', 'name' => 'Meja minimalis M-01'],
+        ['img' => 'lampu-white.jfif', 'now' => 'Rp350.000', 'old' => 'Rp450.000', 'name' => 'Lampu tidur L-01'],
+        ['img' => 'kursi-black.jfif', 'now' => 'Rp3.000.000', 'old' => 'Rp4.000.000', 'name' => 'Kasur tunggal K-01'],
+        ['img' => 'sofa-grey.jfif', 'now' => 'Rp800.000', 'old' => 'Rp900.000', 'name' => 'Sofa L-01'],
+        ['img' => 'sofa-brown.jfif', 'now' => 'Rp800.000', 'old' => 'Rp900.000', 'name' => 'Sofa L-02'],
+        ['img' => 'meja-anak.jfif', 'now' => 'Rp300.000', 'old' => 'Rp400.000', 'name' => 'Meja M-02'],
+        ['img' => 'lampu-white.jfif', 'now' => 'Rp350.000', 'old' => 'Rp450.000', 'name' => 'Lampu L-02'],
+      ];
+    @endphp
+
+    @foreach ($products as $product)
+      <div class="product-card">
+        <img src="{{ asset('images/' . $product['img']) }}" alt="{{ $product['name'] }}">
+        <p class="price-now">{{ $product['now'] }}</p>
+        <p class="price-old">{{ $product['old'] }}</p>
+        <p>{{ $product['name'] }}</p>
+      </div>
+    @endforeach
+  </div>
+
+  <button class="arrow arrow-right" onclick="moveSlide(1)">&#10095;</button>
 </div>
 
-<!-- Slider Script -->
 <script>
-    const slider = document.getElementById('slider');
-    const next = document.getElementById('nextBtn');
-    const prev = document.getElementById('prevBtn');
+  const wrapper = document.getElementById('sliderWrapper');
+  const cards = wrapper.children;
+  const cardWidth = cards[0].offsetWidth;
+  let currentOffset = 0;
 
-    next.addEventListener('click', () => {
-        slider.scrollBy({ left: 220, behavior: 'smooth' });
-    });
+  function moveSlide(direction) {
+    const totalCards = cards.length;
+    const maxOffset = cardWidth * totalCards;
 
-    prev.addEventListener('click', () => {
-        slider.scrollBy({ left: -220, behavior: 'smooth' });
-    });
+    currentOffset += direction * cardWidth;
+
+    // Looping
+    if (currentOffset < 0) {
+      currentOffset = (totalCards - 4) * cardWidth;
+    } else if (currentOffset > (totalCards - 4) * cardWidth) {
+      currentOffset = 0;
+    }
+
+    wrapper.style.transform = `translateX(-${currentOffset}px)`;
+  }
+
+  // Fix resizing layout bug
+  window.addEventListener('resize', () => {
+    currentOffset = 0;
+    wrapper.style.transform = `translateX(0px)`;
+  });
 </script>
-
-<style>
-    .no-scrollbar::-webkit-scrollbar {
-        display: none;
-    }
-    .no-scrollbar {
-        -ms-overflow-style: none;
-        scrollbar-width: none;
-    }
-</style>
 @endsection

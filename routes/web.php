@@ -3,6 +3,10 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ProductController;
+Route::get('/profile', function () {
+    return view('profile');
+})->name('profile');
+
 Route::get('/product', [ProductController::class, 'index'])->name('product');
 
 

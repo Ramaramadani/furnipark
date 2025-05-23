@@ -1,10 +1,11 @@
+<!-- register.blade.php -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Register</title>
-  <link rel="stylesheet" href="{{ asset('css/login.css') }}"> {{-- Pakai CSS login --}}
+  <link rel="stylesheet" href="{{ asset('css/login.css') }}">
 </head>
 <body>
   <div class="container">
@@ -20,6 +21,10 @@
           <div class="form-group">
             <label for="email">Email Address</label>
             <input type="email" name="email" id="email" placeholder="you@example.com" required />
+          </div>
+          <div class="form-group">
+            <label for="kontak">Kontak</label>
+            <input type="text" name="kontak" id="kontak" placeholder="08123456789" required />
           </div>
           <div class="form-group">
             <label for="password">Password</label>

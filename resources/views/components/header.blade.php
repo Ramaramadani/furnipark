@@ -20,9 +20,10 @@
 
         <!-- Icons -->
         <div class="flex items-center gap-4">
-            <button class="border p-2 rounded">
-                <img src="{{ asset('images/account.png') }}" alt="Account" class="w-6 h-6">
-            </button>
+        <a href="{{ route('profile') }}" class="border p-2 rounded block">
+    <img src="{{ asset('images/account.png') }}" alt="Account" class="w-6 h-6">
+</a>
+
             <button class="border p-2 rounded bg-white">
                 <img src="{{ asset('images/bookmark.png') }}" alt="Bookmark" class="w-6 h-6">
             </button>
