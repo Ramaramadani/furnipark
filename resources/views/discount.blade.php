@@ -18,12 +18,14 @@
     box-sizing: border-box;
     padding: 10px;
     text-align: center;
+    transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
   }
 
   .product-card img {
     width: 100%;
     height: 200px;
     object-fit: contain;
+    transition: transform 0.3s ease-in-out;
   }
 
   .price-now {
@@ -67,6 +69,17 @@
     .product-card {
       flex: 0 0 100%;
     }
+  }
+
+  /* Hover effect for product card */
+  .product-card:hover {
+    transform: scale(1.05); /* Zoom in */
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15); /* Shadow effect */
+  }
+
+  /* Hover effect for product image */
+  .product-card:hover img {
+    transform: scale(1.1); /* Zoom in image */
   }
 </style>
 

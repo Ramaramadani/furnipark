@@ -3,6 +3,12 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ProductController;
+
+
+Route::get('/checkout', function () {
+    return view('checkout'); // This will render the checkout.blade.php view
+});
+
 Route::get('/profile', function () {
     return view('profile');
 })->name('profile');
@@ -23,9 +29,15 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/index', function () {
-    return view('home');
+Route::get('/', function () {
+    return view('product'); // Mengarah ke 'product.blade.php'
 });
+
+Route::get('/index', function () {
+    return view('product'); // Mengarah ke 'product.blade.php'
+});
+
+
 Route::get('/product', [ProductController::class, 'index'])->name('product');
 Route::get('/discount', [PageController::class, 'discount'])->name('discount');
 Route::get('/about', [PageController::class, 'about'])->name('about');

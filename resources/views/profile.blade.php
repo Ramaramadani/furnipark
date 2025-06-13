@@ -1,40 +1,47 @@
-@extends('layouts.app')
+@extends('layouts.app') <!-- Reference to app.blade.php -->
 
-@section('content')
-<div class="flex justify-center bg-white py-10 min-h-screen">
-    <div class="flex w-full max-w-6xl gap-12">
-        <!-- Sidebar -->
-        <aside class="w-1/4">
-            <ul class="space-y-6 text-lg font-semibold">
-                <li class="text-black">ACCOUNT</li>
-                <li class="hover:text-orange-500 cursor-pointer font-normal">SETTING</li>
-                <li class="hover:text-orange-500 cursor-pointer font-normal">MEMBER</li>
-                <li class="hover:text-red-500 cursor-pointer font-normal">LOG OUT</li>
-            </ul>
-        </aside>
+@section('content') <!-- Content section that will be placed inside the main body -->
 
-        <!-- Main Content -->
-        <section class="w-3/4 space-y-6">
-            <!-- Profile Box -->
-            <div class="flex items-center border border-gray-300 rounded-md p-4 bg-white shadow-sm">
-                <img src="{{ asset('image/3f7440e7-898b-4d83-8af7-8a01c9f7c7a9.png') }}" alt="Profile Icon" class="w-10 h-10 mr-4">
-                <div>
-                    <p class="font-bold">Name</p>
-                    <p class="text-gray-600 text-sm">Email, Number</p>
-                </div>
-            </div>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Account Page</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
+  />
+</head>
+<body class="min-h-screen flex justify-center items-start p-6 bg-white font-sans"> <!-- Centering added -->
+  <div class="flex space-x-12 w-full max-w-7xl"> <!-- Add max-width to avoid the content stretching too far -->
+    <nav class="flex flex-col space-y-6 text-black text-base font-normal">
+      <a href="#" class="no-underline">ACCOUNT</a>
+      <a href="#" class="no-underline">SETTING</a>
+      <a href="#" class="no-underline">MEMBER</a>
+      <a href="#" class="no-underline">LOG OUT</a>
+    </nav>
+    <section class="flex flex-col space-y-4 w-[320px]">
+      <div class="border border-gray-300 p-2 flex items-center space-x-3">
+        <div class="w-10 h-10 flex items-center justify-center rounded-full border border-black">
+          <i class="fas fa-user text-black text-lg"></i>
+        </div>
+        <div class="flex flex-col leading-tight">
+          <span class="font-bold text-black text-base">Name</span>
+          <span class="text-black text-sm">Email, Number</span>
+        </div>
+      </div>
+      <div class="border border-gray-300 p-2">
+        <span class="font-bold text-black text-base">Address</span><br />
+        <span class="text-black text-sm">+Address</span>
+      </div>
+      <div class="border border-gray-300 p-2">
+        <span class="font-bold text-black text-base">Your Orders</span>
+        <div class="mt-1 h-20 border border-gray-300"></div>
+      </div>
+    </section>
+  </div>
+</body>
+</html>
 
-            <!-- Address Box -->
-            <div class="border border-gray-300 rounded-md p-4 bg-white shadow-sm">
-                <p class="font-bold mb-1">Address</p>
-                <p class="text-gray-600 text-sm">+Address</p>
-            </div>
-
-            <!-- Orders Box -->
-            <div class="border border-gray-300 rounded-md p-4 bg-white shadow-sm h-40">
-                <p class="font-bold">Your Orders</p>
-            </div>
-        </section>
-    </div>
-</div>
-@endsection
+@endsection <!-- Close content section -->
