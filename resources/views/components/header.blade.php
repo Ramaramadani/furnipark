@@ -21,15 +21,11 @@
           </div>
           
           <!-- Search Bar -->
-          <form role="search" class="flex border-2 border-orange-500 rounded-lg overflow-hidden bg-white h-10 flex-grow">
+          <form action="{{ url('/product/search') }}" method="GET" role="search" class="flex border-2 border-orange-500 rounded-lg overflow-hidden bg-white h-10 flex-grow">
             <input type="search" name="search" placeholder="Search" aria-label="Search furniture products" class="flex-grow px-3 text-sm text-gray-600 border-none focus:outline-none" />
             <div class="flex">
               <button type="submit" class="bg-orange-500 text-white w-12 flex items-center justify-center hover:bg-orange-600">
                 <span class="material-icons">search</span>
-              </button>
-              <!-- Filter Icon Updated with PNG from Design Lama -->
-              <button type="button" class="bg-orange-500 text-white w-12 flex items-center justify-center hover:bg-orange-600">
-                <img src="{{ asset('images/filter.png') }}" alt="Filter" class="w-5 h-5">
               </button>
             </div>
           </form>
@@ -51,21 +47,21 @@
 
       <!-- Navigation Menu -->
       <nav class="mt-2">
-    <ul class="flex gap-8 list-none pl-0 m-0 text-sm font-medium">
-        <li>
+        <ul class="flex gap-8 list-none pl-0 m-0 text-sm font-medium">
+          <li>
             <a href="{{ url('/product') }}" class="text-black hover:text-orange-500 {{ Request::is('product') ? 'font-bold' : '' }}">PRODUCT</a>
-        </li>
-        <li>
+          </li>
+          <li>
             <a href="{{ url('/discount') }}" class="text-black hover:text-orange-500 {{ Request::is('discount') ? 'font-bold' : '' }}">DISCOUNT</a>
-        </li>
-        <li>
+          </li>
+          <li>
             <a href="{{ url('/about') }}" class="text-black hover:text-orange-500 {{ Request::is('about') ? 'font-bold' : '' }}">ABOUT US</a>
-        </li>
-        <li>
+          </li>
+          <li>
             <a href="{{ url('/contact') }}" class="text-black hover:text-orange-500 {{ Request::is('contact') ? 'font-bold' : '' }}">CONTACT US</a>
-        </li>
-    </ul>
-</nav>
+          </li>
+        </ul>
+      </nav>
 
     </div>
   </header>

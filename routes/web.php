@@ -2,53 +2,54 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
-use App\Http\Controllers\ProductController;
+use App\Http\Controllers\ProductController; // Pastikan ini diimpor
+use App\Models\Product;
+use Illuminate\Http\Request;
 
-
-Route::get('/checkout', function () {
-    return view('checkout'); // This will render the checkout.blade.php view
+// Rute untuk pencarian produk
+Route::get('/product/search', function (Request $request) {
+    $search = $request->input('search');
+    $products = Product::where('nama_produk', 'like', "%$search%")
+                       ->orWhere('deskripsi', 'like', "%$search%")
+                       ->get();
+    return view('product.index', compact('products')); // Kirim hasil pencarian ke view
 });
 
+// Rute untuk checkout
+Route::get('/checkout', function () {
+    return view('checkout'); 
+});
+
+// Rute untuk profil
 Route::get('/profile', function () {
     return view('profile');
 })->name('profile');
 
 
-
-Route::get('/product', [ProductController::class, 'index'])->name('product');
-
-
-Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
-Route::post('/login', [AuthController::class, 'login']);
 Route::get('/register', [AuthController::class, 'showRegisterForm'])->name('register');
 Route::post('/register', [AuthController::class, 'register']);
+Route::get('/login', [AuthController::class, 'showLoginForm'])->name('login');
+Route::post('/login', [AuthController::class, 'login']);
 
 
 
+// Rute utama (home)
 Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/', function () {
-    return view('product'); // Mengarah ke 'product.blade.php'
-});
-
-Route::get('/index', function () {
-    return view('product'); // Mengarah ke 'product.blade.php'
-});
-
-
+// Rute untuk halaman produk, gunakan controller untuk menghindari duplikasi
 Route::get('/product', [ProductController::class, 'index'])->name('product');
-Route::get('/discount', [PageController::class, 'discount'])->name('discount');
-Route::get('/about', [PageController::class, 'about'])->name('about');
-Route::get('/contact', [PageController::class, 'contact'])->name('contact');
-// routes/web.php
+
+// Rute untuk halaman diskon, gunakan method showDiscounts pada ProductController
+Route::get('/discount', [ProductController::class, 'showDiscounts'])->name('discount'); 
+
+// Rute untuk halaman about
 Route::get('/about', function () {
     return view('about');
 })->name('about');
+
+// Rute untuk halaman kontak
 Route::get('/contact', function () {
     return view('contact');
 })->name('contact');
-Route::get('/discount', function () {
-    return view('discount');
-})->name('discount');

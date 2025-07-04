@@ -71,62 +71,135 @@
     }
   }
 
-  /* Hover effect for product card */
-  .product-card:hover {
-    transform: scale(1.05); /* Zoom in */
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15); /* Shadow effect */
+  .add-to-discount-btn {
+    background-color: #28a745;
+    color: white;
+    padding: 8px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+    display: inline-block;
+    text-align: center;
+    transition: background-color 0.3s;
   }
 
-  /* Hover effect for product image */
-  .product-card:hover img {
-    transform: scale(1.1); /* Zoom in image */
+  .add-to-discount-btn:hover {
+    background-color: #218838;
   }
 </style>
 
-<h2 style="margin-left: 20px;">Produk Diskon</h2>
+<h2 style="margin-left: 20px;">Tambah Produk ke Diskon</h2>
+
+<form id="discount-form">
+  <div class="form-group">
+    <label for="product">Pilih Produk:</label>
+    <select id="product" name="product" class="form-control">
+      <!-- Produk akan dimuat menggunakan data dari server -->
+    </select>
+  </div>
+
+  <div class="form-group">
+    <label for="discount-price">Harga Diskon:</label>
+    <input type="number" id="discount-price" name="discount-price" class="form-control" placeholder="Masukkan harga diskon" required>
+  </div>
+
+  <button type="submit" class="add-to-discount-btn">Tambah ke Diskon</button>
+</form>
 
 <div class="slider-container">
   <button class="arrow arrow-left" onclick="moveSlide(-1)">&#10094;</button>
 
   <div class="slider-wrapper" id="sliderWrapper">
-    @php
-      $products = [
-        ['img' => 'meja-anak.jfif', 'now' => 'Rp300.000', 'old' => 'Rp400.000', 'name' => 'Meja minimalis M-01'],
-        ['img' => 'lampu-white.jfif', 'now' => 'Rp350.000', 'old' => 'Rp450.000', 'name' => 'Lampu tidur L-01'],
-        ['img' => 'kursi-black.jfif', 'now' => 'Rp3.000.000', 'old' => 'Rp4.000.000', 'name' => 'Kasur tunggal K-01'],
-        ['img' => 'sofa-grey.jfif', 'now' => 'Rp800.000', 'old' => 'Rp900.000', 'name' => 'Sofa L-01'],
-        ['img' => 'sofa-brown.jfif', 'now' => 'Rp800.000', 'old' => 'Rp900.000', 'name' => 'Sofa L-02'],
-        ['img' => 'meja-anak.jfif', 'now' => 'Rp300.000', 'old' => 'Rp400.000', 'name' => 'Meja M-02'],
-        ['img' => 'lampu-white.jfif', 'now' => 'Rp350.000', 'old' => 'Rp450.000', 'name' => 'Lampu L-02'],
-      ];
-    @endphp
-
-    @foreach ($products as $product)
-      <div class="product-card">
-        <img src="{{ asset('images/' . $product['img']) }}" alt="{{ $product['name'] }}">
-        <p class="price-now">{{ $product['now'] }}</p>
-        <p class="price-old">{{ $product['old'] }}</p>
-        <p>{{ $product['name'] }}</p>
-      </div>
-    @endforeach
+    <!-- Produk diskon yang diambil dari API akan dimuat di sini -->
   </div>
 
   <button class="arrow arrow-right" onclick="moveSlide(1)">&#10095;</button>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 <script>
-  const wrapper = document.getElementById('sliderWrapper');
-  const cards = wrapper.children;
-  const cardWidth = cards[0].offsetWidth;
-  let currentOffset = 0;
+  // Mengirim data produk dari Laravel ke JavaScript
+  const products = @json($products);  // Menggunakan Blade untuk mengirim data produk ke JavaScript
 
+  // Memuat produk ke dropdown
+  const productSelect = document.getElementById('product');
+  products.forEach(product => {
+    const option = document.createElement('option');
+    option.value = product.id;
+    option.textContent = `${product.nama_produk} - Rp ${product.harga}`;
+    productSelect.appendChild(option);
+  });
+
+  // Menangani pengiriman form untuk menambahkan diskon
+  document.getElementById('discount-form').addEventListener('submit', function(event) {
+    event.preventDefault();
+
+    const productId = document.getElementById('product').value;
+    const discountPrice = document.getElementById('discount-price').value;
+
+    if (discountPrice <= 0) {
+        alert("Harga diskon harus lebih besar dari 0.");
+        return;
+    }
+
+    axios.post(`http://127.0.0.1:8080/api/products/${productId}/add_to_discount/`, {
+      discount_price: discountPrice
+    })
+    .then(response => {
+      alert('Produk berhasil ditambahkan ke diskon');
+      fetchDiscountProducts();
+    })
+    .catch(error => {
+      console.error("Error saat menambahkan produk ke diskon:", error);
+      alert('Terjadi kesalahan saat menambahkan produk ke diskon');
+    });
+  });
+
+  // Mengambil produk diskon dan menampilkannya di slider
+  function fetchDiscountProducts() {
+    axios.get('http://127.0.0.1:8080/api/discounts/')
+      .then(response => {
+        const products = response.data;
+        const wrapper = document.getElementById('sliderWrapper');
+        wrapper.innerHTML = '';  // Kosongkan slider sebelum menambahkan produk baru
+
+        products.forEach((product) => {
+          const productCard = document.createElement('div');
+          productCard.classList.add('product-card');
+          
+          // Menampilkan gambar produk dengan path yang benar
+          productCard.innerHTML = `
+  <img src="http://127.0.0.1:8000/images/${product.gambar}" alt="${product.nama_produk}" class="w-full h-40 object-contain mb-3">
+  <p class="price-now">Rp ${new Intl.NumberFormat().format(product.harga_diskon)}</p>
+  <p class="price-old">Rp ${new Intl.NumberFormat().format(product.harga)}</p>
+  <p>${product.nama_produk}</p>
+`;
+
+
+          wrapper.appendChild(productCard);
+        });
+      })
+      .catch(error => {
+        console.error('Terjadi kesalahan:', error);
+        alert('Gagal mengambil data produk diskon');
+      });
+  }
+
+  // Panggil fungsi untuk memuat produk diskon saat halaman dimuat
+  fetchDiscountProducts();
+
+  // Fungsi untuk navigasi slider (geser kiri/kanan)
   function moveSlide(direction) {
+    const wrapper = document.getElementById('sliderWrapper');
+    const cards = wrapper.children;
+    const cardWidth = cards[0]?.offsetWidth || 0;
     const totalCards = cards.length;
     const maxOffset = cardWidth * totalCards;
 
+    let currentOffset = 0;
     currentOffset += direction * cardWidth;
 
-    // Looping
     if (currentOffset < 0) {
       currentOffset = (totalCards - 4) * cardWidth;
     } else if (currentOffset > (totalCards - 4) * cardWidth) {
@@ -135,11 +208,6 @@
 
     wrapper.style.transform = `translateX(-${currentOffset}px)`;
   }
-
-  // Fix resizing layout bug
-  window.addEventListener('resize', () => {
-    currentOffset = 0;
-    wrapper.style.transform = `translateX(0px)`;
-  });
 </script>
+
 @endsection

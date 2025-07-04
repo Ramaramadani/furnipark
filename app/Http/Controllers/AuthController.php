@@ -4,62 +4,74 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Validator;
 
 class AuthController extends Controller
 {
-    public function showLoginForm()
-    {
-        return view('login');
-    }
-
+    // Menampilkan halaman register
     public function showRegisterForm()
     {
         return view('register');
     }
 
-    public function login(Request $request)
+    // Menampilkan halaman login
+    public function showLoginForm()
     {
-        $response = Http::post('http://localhost:8000/api/token/', [
-            'username' => $request->username,
-            'password' => $request->password,
-        ]);
-
-        if ($response->successful()) {
-            $token = $response->json()['access'];
-            session(['api_token' => $token]);
-            return redirect('/index');
-        } else {
-            return back()->withErrors([
-                'login' => 'Username atau password salah.',
-            ])->withInput();
-        }
+        return view('login');
     }
 
+    // Register function
     public function register(Request $request)
     {
-        $request->validate([
-            'username' => 'required',
-            'email' => 'required|email',
-            'kontak' => 'required',
-            'password' => 'required|min:6|confirmed',
+        // Validasi input form
+        $validator = Validator::make($request->all(), [
+            'username' => 'required|string|max:100',
+            'gmail' => 'required|email',
+            'kontak' => 'required|string|max:20',
+            'password' => 'required|string|min:8|confirmed',
         ]);
 
-        $response = Http::withHeaders([
-            'Accept' => 'application/json',
-            'Content-Type' => 'application/json',
-        ])->post('http://localhost:8000/api/register/', [
+        if ($validator->fails()) {
+            return redirect()->back()->withErrors($validator)->withInput();
+        }
+
+        // Mengirim data ke Django API menggunakan HTTP Client Laravel
+        $response = Http::post('http://127.0.0.1:8080/api/users/', [
             'username' => $request->username,
-            'gmail' => $request->email,
+            'gmail' => $request->gmail,
             'kontak' => $request->kontak,
             'password' => $request->password,
         ]);
 
+        // Cek apakah respons berhasil
         if ($response->successful()) {
-            return redirect()->route('login')->with('success', 'Registrasi berhasil. Silakan login.');
+            return redirect()->route('login')->with('success', 'Account created successfully. Please login.');
         } else {
-            return back()->withErrors([
-                'register' => 'Registrasi gagal: ' . $response->body(),
-            ])->withInput();
+            return redirect()->back()->with('error', 'Failed to register. Please try again.');
         }
+    }
+
+    // Login function
+    public function login(Request $request)
+    {
+        // Validasi input login
+        $credentials = $request->only('username', 'password');
+
+        // Kirim data login ke API Django menggunakan metode GET
+        $queryParams = http_build_query($credentials);  // Membuat query string dari username dan password
+        $response = Http::get('http://127.0.0.1:8080/api/users/?' . $queryParams);
+
+        // Cek apakah login berhasil berdasarkan response dari Django API
+        if ($response->successful()) {
+            $data = $response->json();
+            if (isset($data['token'])) {
+                // Simpan token JWT dalam session atau localStorage jika diperlukan
+                session(['token' => $data['token']]);
+                return redirect()->route('profile');  // Redirect ke halaman profil setelah login berhasil
+            }
+        }
+
+        // Jika login gagal, kembalikan dengan error
+        return redirect()->back()->with('error', 'Invalid login credentials.');
     }
 }
