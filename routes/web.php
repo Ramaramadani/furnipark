@@ -5,6 +5,20 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\ProductController; // Pastikan ini diimpor
 use App\Models\Product;
 use Illuminate\Http\Request;
+use App\Http\Controllers\OrderController;
+use App\Http\Controllers\OrderReportController;
+
+Route::get('/laporan-penjualan', [OrderReportController::class, 'index'])->name('laporan.penjualan');
+Route::get('/laporan-penjualan/export/excel', [OrderReportController::class, 'exportExcel'])->name('laporan.penjualan.excel');
+Route::get('/laporan-penjualan/export/word', [OrderReportController::class, 'exportWord'])->name('laporan.penjualan.word');
+
+
+
+Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+
+Route::get('/', function () {
+    return view('index'); // Memanggil index.blade.php
+});
 
 // Rute untuk pencarian produk
 Route::get('/product/search', function (Request $request) {

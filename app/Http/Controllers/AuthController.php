@@ -51,27 +51,40 @@ class AuthController extends Controller
         }
     }
 
-    // Login function
+    public function logout()
+    {
+        session()->flush(); // Hapus semua data sesi
+        return redirect()->route('login')->with('success', 'Berhasil logout.');
+    }
+    
+    
     public function login(Request $request)
     {
         // Validasi input login
         $credentials = $request->only('username', 'password');
-
-        // Kirim data login ke API Django menggunakan metode GET
-        $queryParams = http_build_query($credentials);  // Membuat query string dari username dan password
-        $response = Http::get('http://127.0.0.1:8080/api/users/?' . $queryParams);
-
-        // Cek apakah login berhasil berdasarkan response dari Django API
+    
+        // Kirim data login ke API Django
+        $response = Http::post('http://127.0.0.1:8080/api/users/login/', $credentials);
+    
         if ($response->successful()) {
             $data = $response->json();
             if (isset($data['token'])) {
-                // Simpan token JWT dalam session atau localStorage jika diperlukan
-                session(['token' => $data['token']]);
-                return redirect()->route('profile');  // Redirect ke halaman profil setelah login berhasil
+                // ✅ Simpan token & user info ke session
+                session([
+                    'token' => $data['token'],
+                    'username' => $credentials['username'],
+                    'is_logged_in' => true
+                ]);
+    
+                session()->flash('success', 'Login berhasil!');
+                return redirect()->route('profile');
             }
         }
-
-        // Jika login gagal, kembalikan dengan error
-        return redirect()->back()->with('error', 'Invalid login credentials.');
+    
+        // Jika login gagal
+        session()->flash('error', 'Invalid login credentials. Please try again.');
+        return redirect()->back();
     }
+    
+    
 }
