@@ -5,8 +5,17 @@
     @if(session('is_logged_in'))
         <div class="flex justify-between items-center mb-6">
             <div>
-                <h1 class="text-3xl font-bold text-gray-800">Selamat datang, {{ session('username') }} 👋</h1>
-                <p class="text-gray-500">Berikut adalah status pesanan Anda</p>
+                {{-- Menampilkan pesan selamat datang berdasarkan role --}}
+                @if(session('role') == 'admin')
+                    <h1 class="text-3xl font-bold text-gray-800">Selamat datang, Admin {{ session('username') }}</h1>
+                @elseif(session('role') == 'owner')
+                    <h1 class="text-3xl font-bold text-gray-800">Selamat datang, Owner {{ session('username') }}</h1>
+                @elseif(session('role') == 'cashier')
+                    <h1 class="text-3xl font-bold text-gray-800">Selamat datang, Cashier {{ session('username') }}</h1>
+                @else
+                    <h1 class="text-3xl font-bold text-gray-800">Selamat datang, {{ session('username') }}</h1>
+                @endif
+                <p class="text-gray-500">Dashboard Furnipark</p>
             </div>
             <form action="{{ route('logout') }}" method="POST">
                 @csrf
@@ -14,6 +23,101 @@
             </form>
         </div>
 
+        {{-- Dashboard Menu --}}
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+            
+            {{-- Show 'Manajemen Pesanan' only for Cashier --}}
+            @if(session('role') == 'cashier')
+                <a href="http://127.0.0.1:8000/orders" class="p-5 bg-white shadow-md rounded-xl hover:shadow-lg transition group">
+                    <div class="flex items-center space-x-4">
+                        <div class="p-3 bg-yellow-100 rounded-full text-yellow-600 text-2xl">
+                            🛒
+                        </div>
+                        <div>
+                            <h3 class="text-lg font-semibold text-gray-800 group-hover:text-yellow-700">Manajemen Pesanan</h3>
+                            <p class="text-sm text-gray-500">Kelola & pantau pesanan pelanggan</p>
+                        </div>
+                    </div>
+                </a>
+            @endif
+
+            {{-- Show 'Manajemen Diskon' only for Admin --}}
+            @if(session('role') == 'admin')
+                <a href="http://127.0.0.1:8000/discounts" class="p-5 bg-white shadow-md rounded-xl hover:shadow-lg transition group">
+                    <div class="flex items-center space-x-4">
+                        <div class="p-3 bg-pink-100 rounded-full text-pink-600 text-2xl">
+                            💰
+                        </div>
+                        <div>
+                            <h3 class="text-lg font-semibold text-gray-800 group-hover:text-pink-700">Manajemen Diskon</h3>
+                            <p class="text-sm text-gray-500">Atur promo & diskon produk</p>
+                        </div>
+                    </div>
+                </a>
+            @endif
+
+            {{-- Show 'Manajemen Produk' only for Admin --}}
+            @if(session('role') == 'admin')
+                <a href="http://127.0.0.1:8000/products" class="p-5 bg-white shadow-md rounded-xl hover:shadow-lg transition group">
+                    <div class="flex items-center space-x-4">
+                        <div class="p-3 bg-green-100 rounded-full text-green-600 text-2xl">
+                            🪑
+                        </div>
+                        <div>
+                            <h3 class="text-lg font-semibold text-gray-800 group-hover:text-green-700">Manajemen Produk</h3>
+                            <p class="text-sm text-gray-500">Tambah & kelola produk furnitur</p>
+                        </div>
+                    </div>
+                </a>
+            @endif
+
+            {{-- Show 'Laporan Penjualan' for Cashier and Owner --}}
+            @if(session('role') == 'cashier' || session('role') == 'owner')
+                <a href="http://127.0.0.1:8000/laporan-penjualan" class="p-5 bg-white shadow-md rounded-xl hover:shadow-lg transition group">
+                    <div class="flex items-center space-x-4">
+                        <div class="p-3 bg-blue-100 rounded-full text-blue-600 text-2xl">
+                            📊
+                        </div>
+                        <div>
+                            <h3 class="text-lg font-semibold text-gray-800 group-hover:text-blue-700">Laporan Penjualan</h3>
+                            <p class="text-sm text-gray-500">Lihat laporan & statistik penjualan</p>
+                        </div>
+                    </div>
+                </a>
+            @endif
+
+            {{-- Show 'Kontak & Feedback' only for Owner --}}
+            @if(session('role') == 'owner')
+                <a href="http://127.0.0.1:8000/contacts" class="p-5 bg-white shadow-md rounded-xl hover:shadow-lg transition group">
+                    <div class="flex items-center space-x-4">
+                        <div class="p-3 bg-purple-100 rounded-full text-purple-600 text-2xl">
+                            📞
+                        </div>
+                        <div>
+                            <h3 class="text-lg font-semibold text-gray-800 group-hover:text-purple-700">Kontak & Feedback</h3>
+                            <p class="text-sm text-gray-500">Tanggapi saran & masukan pelanggan</p>
+                        </div>
+                    </div>
+                </a>
+            @endif
+
+            {{-- Show 'Manajemen Pengguna' for Admin and Owner --}}
+            @if(session('role') == 'admin' || session('role') == 'owner')
+                <a href="http://127.0.0.1:8000/users" class="p-5 bg-white shadow-md rounded-xl hover:shadow-lg transition group">
+                    <div class="flex items-center space-x-4">
+                        <div class="p-3 bg-blue-100 rounded-full text-blue-600 text-2xl">
+                            👥
+                        </div>
+                        <div>
+                            <h3 class="text-lg font-semibold text-gray-800 group-hover:text-blue-700">Manajemen Pengguna</h3>
+                            <p class="text-sm text-gray-500">Kelola data pengguna dan peran</p>
+                        </div>
+                    </div>
+                </a>
+            @endif
+        </div>
+
+        {{-- Bagian Pesanan --}}
         <div x-data="orders()" x-init="fetchOrders()" class="bg-white p-6 rounded-xl shadow-md">
             <template x-if="loading">
                 <div class="flex items-center justify-center py-12">
@@ -59,6 +163,7 @@
                 </div>
             </template>
         </div>
+
     @else
         <div class="text-center py-16">
             <h2 class="text-xl text-gray-700">Silakan <a href="{{ route('login') }}" class="text-blue-600 underline">login</a> untuk melihat profil Anda.</h2>

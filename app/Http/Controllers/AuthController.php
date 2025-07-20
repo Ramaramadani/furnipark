@@ -58,33 +58,35 @@ class AuthController extends Controller
     }
     
     
-    public function login(Request $request)
-    {
-        // Validasi input login
-        $credentials = $request->only('username', 'password');
-    
-        // Kirim data login ke API Django
-        $response = Http::post('http://127.0.0.1:8080/api/users/login/', $credentials);
-    
-        if ($response->successful()) {
-            $data = $response->json();
-            if (isset($data['token'])) {
-                // ✅ Simpan token & user info ke session
-                session([
-                    'token' => $data['token'],
-                    'username' => $credentials['username'],
-                    'is_logged_in' => true
-                ]);
-    
-                session()->flash('success', 'Login berhasil!');
-                return redirect()->route('profile');
-            }
+public function login(Request $request)
+{
+    // Validasi input login
+    $credentials = $request->only('username', 'password');
+
+    // Kirim data login ke API Django
+    $response = Http::post('http://127.0.0.1:8080/api/users/login/', $credentials);
+
+    if ($response->successful()) {
+        $data = $response->json();
+        if (isset($data['token'])) {
+            // Simpan token & role ke session
+            session([
+                'token' => $data['token'],
+                'username' => $credentials['username'],
+                'role' => $data['role'],  // Menyimpan role ke session
+                'is_logged_in' => true,
+            ]);
+
+            session()->flash('success', 'Login berhasil!');
+            return redirect()->route('profile');
         }
-    
-        // Jika login gagal
-        session()->flash('error', 'Invalid login credentials. Please try again.');
-        return redirect()->back();
     }
+
+    // Jika login gagal
+    session()->flash('error', 'Invalid login credentials. Please try again.');
+    return redirect()->back();
+}
+
     
     
 }
