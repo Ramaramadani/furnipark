@@ -119,7 +119,11 @@
         });
 
         currentOffset = 0;
+<<<<<<< HEAD
         wrapper.style.transform = `translateX(0px)`;
+=======
+        wrapper.style.transform = translateX(0px);
+>>>>>>> 5c9f1ace7fdc7eeeec96401eb70f7ca9dc9780f8
       })
       .catch(error => {
         console.error('Gagal mengambil data:', error);
@@ -142,7 +146,11 @@
     if (currentOffset < 0) currentOffset = maxOffset;
     if (currentOffset > maxOffset) currentOffset = 0;
 
+<<<<<<< HEAD
     wrapper.style.transform = `translateX(-${currentOffset}px)`;
+=======
+    wrapper.style.transform = translateX(-${currentOffset}px);
+>>>>>>> 5c9f1ace7fdc7eeeec96401eb70f7ca9dc9780f8
   }
 
   fetchDiscountProducts();

@@ -45,7 +45,11 @@
       </div>
       <div class="mb-6">
         <label for="password" class="block text-gray-700">Password</label>
+<<<<<<< HEAD
         <input type="password" name="password" id="password" class="w-full p-3 mt-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500" placeholder="********" required />
+=======
+        <input type="password" name="password" id="password" class="w-full p-3 mt-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500" placeholder="" required />
+>>>>>>> 5c9f1ace7fdc7eeeec96401eb70f7ca9dc9780f8
       </div>
       <button type="submit" class="w-full bg-orange-600 text-white py-3 rounded-full hover:bg-orange-700 transition duration-200">Login</button>
       
